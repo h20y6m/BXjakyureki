@@ -1,0 +1,61 @@
+FROM ubuntu:18.04
+
+# make Japanese locale
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends locales; \
+	rm -rf /var/lib/apt/lists/*; \
+	localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8
+ENV LANG ja_JP.UTF-8
+
+# install TeX Live requirements
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		ca-certificates \
+		curl \
+		fontconfig \
+		gnupg \
+		perl \
+		wget \
+		zip \
+	; \
+	rm -rf /var/lib/apt/lists/*
+
+ENV TL_ARCH x86_64-linux
+ENV TL_YEAR 2018
+ENV TL_REPO https://texlive.texjp.org/$TL_YEAR/tlnet/
+
+# install TeX Live infra
+RUN set -eux; \
+	mkdir -p /tmp/install-tl; \
+	cd /tmp/install-tl; \
+	wget "$TL_REPO/install-tl-unx.tar.gz"; \
+	tar zxf install-tl-unx.tar.gz; \
+	cd install-tl-20*; \
+	echo 'selected_scheme scheme-infraonly' > texlive.profile; \
+	echo "TEXDIR /usr/local/texlive/$TL_YEAR" >> texlive.profile; \
+	echo "TEXMFCONFIG ~/.texlive$TL_YEAR/texmf-config" >> texlive.profile; \
+	echo "TEXMFHOME ~/texmf" >> texlive.profile; \
+	echo "TEXMFLOCAL /usr/local/texlive/$TL_YEAR/texmf-local" >> texlive.profile; \
+	echo "TEXMFSYSCONFIG /usr/local/texlive/$TL_YEAR/texmf-config" >> texlive.profile; \
+	echo "TEXMFSYSVAR /usr/local/texlive/$TL_YEAR/texmf-var" >> texlive.profile; \
+	echo "TEXMFVAR ~/.texlive$TL_YEAR/texmf-var" >> texlive.profile; \
+	echo "binary_$TL_ARCH 1" >> texlive.profile; \
+	echo 'option_doc 0' >> texlive.profile; \
+	echo 'option_src 0' >> texlive.profile; \
+	echo 'option_adjustrepo 0' >> texlive.profile; \
+	echo 'option_autobackup 0' >> texlive.profile; \
+	./install-tl -profile texlive.profile -repository "$TL_REPO"; \
+	rm -rf /tmp/install-tl
+ENV PATH /usr/local/texlive/$TL_YEAR/bin/$TL_ARCH:$PATH
+
+WORKDIR /work
+
+RUN tlmgr install \
+	l3build l3kernel latex-bin lm luaotfload luatex platex ptex tex uplatex uptex xetex \
+	amsfonts amsmath booktabs colortbl csquotes ec enumitem etoolbox fancyvrb graphics graphics-def \
+	hyperref ifluatex ifxetex l3packages makeindex oberdiek psnfss symbol tools underscore url zapfding \
+	cjk ipaex-type1
+
+WORKDIR /work

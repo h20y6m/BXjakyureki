@@ -1,0 +1,853 @@
+% \iffalse meta-comment
+%
+%% File: bxjakyureki.dtx
+%
+%  Copyright (c) 2022 Yukimasa Morimi (h20y6m)
+%
+%<*driver|package>
+% The version of expl3 required is tested as early as possible, as
+% some really old versions do not define \ProvidesExplPackage.
+\RequirePackage{expl3}[2018/05/13]
+%<package>\@ifpackagelater{expl3}{2018/05/13}
+%<package>  {}
+%<package>  {%
+%<package>    \PackageError{bxjakyureki}{Support package l3kernel too old}
+%<package>      {%
+%<package>        Please install an up to date version of l3kernel\MessageBreak
+%<package>        using your TeX package manager or from CTAN.\MessageBreak
+%<package>        \MessageBreak
+%<package>        Loading bxjakyureki will abort!%
+%<package>      }%
+%<package>    \endinput
+%<package>  }
+%</driver|package>
+%<*driver>
+\documentclass[full]{l3doc}
+\usepackage{CJKutf8}
+\usepackage{bxjakyureki}
+\newcommand*{\Ja}[1]{%
+  \bgroup
+    \catcode`\%=14
+    \def~{\hspace{.25em plus.15em minus.06em}}%
+    \begin{CJK}{UTF8}{ipxm}#1\end{CJK}%
+  \egroup}
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \title{^^A
+%   The \textsf{bxjakyureki} package\\ Japanese old lunisolar calendar^^A
+% }
+%
+% \author{^^A
+%  Yukimasa Morimi (h20y6m)\thanks
+%    {^^A
+%      GitHub:
+%        \url{https://github.com/h20y6m}^^A
+%    }^^A
+% }
+%
+% \date{Released 2022-12-02}
+%
+% \maketitle
+%
+% \begin{documentation}
+%
+% This package provaides a command to convert Gregorian or Julian calendar
+% dates to Japanese old lunisolar calendar (\emph{ky\=ureki}; \Ja{旧暦}) dates.
+%
+% \section{\LaTeXe\ interfaces}
+%
+% \begin{function}{\jakyureki}
+%   \begin{syntax}
+%     |\jakyureki|\marg{year}\marg{month}\marg{day}
+%   \end{syntax}
+%   Converts Western calendar dates into Japanese old lunisolar calendar dates.
+% \end{function}
+%
+% \section{expl3 interfaces}
+%
+% \subsection{Western calendar convertion}
+%
+% \begin{function}[EXP]{\bxjakyureki_gregorian_to_jdn:nnn}
+%   \begin{syntax}
+%     |\bxjakyureki_gregorian_to_jdn:nnn| \marg{year} \marg{month} \marg{day}
+%   \end{syntax}
+%   Converts Gregorian calendar dates into Julian Day Number (JDN).
+% \end{function}
+%
+% \begin{function}[EXP]{\bxjakyureki_julian_to_jdn:nnn}
+%   \begin{syntax}
+%     |\bxjakyureki_julian_to_jdn:nnn| \marg{year} \marg{month} \marg{day}
+%   \end{syntax}
+%   Converts Julian calendar dates into Julian Day Number (JDN).
+% \end{function}
+%
+% \begin{function}[EXP]{\bxjakyureki_western_to_jdn:nnn}
+%   \begin{syntax}
+%     |\bxjakyureki_western_to_jdn:nnn| \marg{year} \marg{month} \marg{day}
+%   \end{syntax}
+%   Converts Gregorian or Julian calendar dates into Julian Day Number (JDN).
+%   After October 15, 1582 treated as Gregorian calendar, otherwise Julian calendar.
+% \end{function}
+%
+% \begin{function}[EXP]{\bxjakyureki_apply_gregorian_from_jdn:Nn}
+%   \begin{syntax}
+%     |\bxjakyureki_apply_gregorian_from_jdn:Nn| \meta{function} \marg{number}
+%   \end{syntax}
+%   Converts JDN \meta{number} into Gregorian calendar date, and apply \meta{function}.
+%   The \meta{function} recives three arguments \marg{year} \marg{month} \marg{day}.
+% \end{function}
+%
+% \begin{function}[EXP]{\bxjakyureki_apply_julian_from_jdn:Nn}
+%   \begin{syntax}
+%     |\bxjakyureki_apply_julian_from_jdn:Nn| \meta{function} \marg{number}
+%   \end{syntax}
+%   Converts JDN \meta{number} into Julian calendar date, and apply \meta{function}.
+%   The \meta{function} recives three arguments \marg{year} \marg{month} \marg{day}.
+% \end{function}
+%
+% \begin{function}[EXP]{\bxjakyureki_apply_western_from_jdn:Nn}
+%   \begin{syntax}
+%     |\bxjakyureki_apply_western_from_jdn:Nn| \meta{function} \marg{number}
+%   \end{syntax}
+%   Converts JDN \meta{number} into Gregorian or Julian calendar date,
+%   and apply \meta{function}. The \meta{function} recives three arguments
+%   \marg{year} \marg{month} \marg{day}. After October 15, 1582 treated as
+%   Gregorian calendar, otherwise Julian calendar.
+% \end{function}
+%
+% \subsection{Japanese calendar convertion}
+%
+% \begin{function}[EXP]{\bxjakyureki_apply_lunisolar_from_jdn:Nn}
+%   \begin{syntax}
+%     |\bxjakyureki_apply_western_from_jdn:Nn| \meta{function} \marg{number}
+%   \end{syntax}
+%   Converts JDN \meta{number} into Japanese lunisolar calendar date,
+%   and apply \meta{function}. The \meta{function} recives four arguments
+%   \marg{year} \marg{leap} \marg{month} \marg{day}. \meta{year} is the
+%   corresponding year in the Western calendar, e.g.\ \emph{Meiji} 4 (\Ja{明治~$4$~年};
+%   February $19$, $1871$ -- February $8$, $1872$) is $1871$.
+%   \meta{leap} is $1$ for leap month, $0$ otherwise.
+% \end{function}
+%
+% \end{documentation}
+%
+% \begin{implementation}
+%
+% \section{\pkg{bxjakyureki} Implementation}
+%
+%    \begin{macrocode}
+%<*package>
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%<@@=bxjakyureki>
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\ProvidesExplPackage{bxjakyureki}{2022-12-02}{}
+  {Japanese old lunisolar calendar}
+%    \end{macrocode}
+%
+% \subsection{Helpers}
+%
+% \begin{macro}[EXP]{\@@_from_jis:w}
+% \begin{macro}[EXP]{\@@_to_kanji:w}
+% \begin{macro}{\@@_set_kansujichar:nn}
+%   p\TeX\ Primitives.
+%    \begin{macrocode}
+\bool_lazy_or:nnT
+  { \sys_if_engine_ptex_p: }
+  { \sys_if_engine_uptex_p: }
+  {
+    \cs_new_eq:NN \@@_from_jis:w \tex_jis:D
+    \cs_new_eq:NN \@@_to_kanji:w \tex_kansuji:D
+    \cs_new_protected:Npn \@@_set_kansujichar:nn #1#2
+      { \tex_kansujichar:D \int_eval:n {#1} = \int_eval:n {#2} \exp_stop_f: }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@@_ja_generate:nnnn}
+%   Helper function for Generate Japanese text.
+%   |#2|, |#3|, and |#4| are comma-separated JIS, Unicode, and UTF-8 encoded
+%   hexadecimal character codes.
+%    \begin{macrocode}
+\bool_lazy_or:nnT
+  { \sys_if_engine_ptex_p: }
+  { \sys_if_engine_uptex_p: }
+  {
+    \cs_new_protected:Npn \@@_ja_generate:nnnn #1#2#3#4
+      {
+        \group_begin:
+          \tl_clear:N \l_tmpa_tl
+          \clist_map_inline:nn {#2}
+            {
+%    \end{macrocode}
+%   In (u)p\TeX, we use the kansuji trick. That is a way to generate
+%   Japanese character token.
+%    \begin{macrocode}
+              \@@_set_kansujichar:nn
+                { \c_one_int } { \@@_from_jis:w "##1 }
+              \tl_put_right:No \l_tmpa_tl
+                { \@@_to_kanji:w \c_one_int }
+            }
+          \tl_set:Nx \l_tmpa_tl
+            {
+              \exp_not:n {#1} { \exp_not:V \l_tmpa_tl }
+            }
+          \exp_after:wN
+        \group_end:
+          \l_tmpa_tl
+      }
+  }
+\bool_lazy_or:nnT
+  { \sys_if_engine_luatex_p: }
+  { \sys_if_engine_xetex_p: }
+  {
+    \cs_new_protected:Npn \@@_ja_generate:nnnn #1#2#3#4
+      {
+        \group_begin:
+          \tl_clear:N \l_tmpa_tl
+          \clist_map_inline:nn {#3}
+            {
+              \exp_args:NNo \tl_put_right:No \l_tmpa_tl
+                { \char_generate:nn { "##1 } { 11 } }
+            }
+          \tl_set:Nx \l_tmpa_tl
+            {
+              \exp_not:n {#1} { \exp_not:V \l_tmpa_tl }
+            }
+          \exp_after:wN
+        \group_end:
+          \l_tmpa_tl
+      }
+  }
+\cs_if_exist:NF \@@_ja_generate:nnnn
+  {
+    \cs_new_protected:Npn \@@_ja_generate:nnnn #1#2#3#4
+      {
+        \group_begin:
+          \tl_clear:N \l_tmpa_tl
+          \clist_map_inline:nn {#4}
+            {
+              \exp_args:NNo \tl_put_right:No \l_tmpa_tl
+                { \char_generate:nn { "##1 } { 13 } }
+            }
+          \tl_set:Nx \l_tmpa_tl
+            {
+              \exp_not:n {#1} { \exp_not:V \l_tmpa_tl }
+            }
+          \exp_after:wN
+        \group_end:
+          \l_tmpa_tl
+      }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_ja_tl_const:Nnnn}
+%   Creates a new constant token list variable which contained japanese text.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_ja_tl_const:Nnnn #1
+  { \@@_ja_generate:nnnn { \tl_const:Nn #1 } }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Variables and constants}
+%
+%    \begin{macrocode}
+\tl_new:N \g_@@_gengo_data_tl
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\scan_new:N \s_@@
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\int_new:N \g_@@_kyureki_data_min_jdn_int
+\int_new:N \g_@@_kyureki_data_max_jdn_int
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\@@_ja_tl_const:Nnnn \c_@@_nen_tl
+  { 472F } { 5E74 } { E5,B9,B4 }
+\@@_ja_tl_const:Nnnn \c_@@_getsu_tl
+  { 376E } { 6708 } { E6,9C,88 }
+\@@_ja_tl_const:Nnnn \c_@@_nichi_tl
+  { 467C } { 65E5 } { E6,97,A5 }
+\@@_ja_tl_const:Nnnn \c_@@_gan_tl
+  { 3835 } { 5143 } { E5,85,83 }
+\@@_ja_tl_const:Nnnn \c_@@_uru_tl
+  { 313C } { 958F } { E9,96,8F }
+%    \end{macrocode}
+%
+% \subsection{Load database}
+%
+%    \begin{macrocode}
+\cs_new:Npn \@@_gset_kyureki_data_range:nn #1#2
+  {
+    \int_gset:Nn \g_@@_kyureki_data_min_jdn_int {#1}
+    \int_gset:Nn \g_@@_kyureki_data_max_jdn_int {#2}
+  }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\cs_new:Npn \@@_gset_kyureki_data:nnnnn #1#2#3#4#5
+  {
+    \cs_gset:cpn { g_@@_kyureki_data_ #1 }
+      { {#2} {#3} {#4} {#5} }
+  }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\file_input:n { bxjakyureki-kyureki.def }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\cs_new:Npn \@@_gput_gengo_data:nnnnnnn #1#2#3#4#5#6#7
+  {
+    \@@_ja_generate:nnnn
+      {
+        \@@_gput_gengo_data_aux:nnnnn
+          {#1} {#2} {#3} {#4}
+      }
+      {#5} {#6} {#7}
+  }
+\cs_new:Npn \@@_gput_gengo_data_aux:nnnnn #1#2#3#4#5
+  {
+    \tl_gput_right:Nn \g_@@_gengo_data_tl
+      { {#1} {#2} {#3} {#4} {#5} \s_@@ }
+  }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\file_input:n { bxjakyureki-gengo.def }
+%    \end{macrocode}
+%
+% \subsection{Convert Western calendar}
+%
+% \begin{macro}{\bxjakyureki_gregorian_to_jdn:nnn}
+%   Converting Gregorian calendar date to Julian Day Number~\cite{wiki:Julian day}.
+%   The algorithm is valid for all (possibly proleptic) Gregorian calendar
+%   dates after November $23$, $-4713$.
+%   Divisions are integer divisions towards zero; fractional parts are ignored.
+%   \begin{multline*}
+%     \text{JDN} =
+%       (1461 \times (Y + 4800 + (M - 14)/12))/4  \\
+%       + (367 \times (M - 2 - 12 \times ((M - 14)/12)))/12 \\
+%       - (3 \times ((Y + 4900 + (M - 14)/12)/100))/4
+%       + D
+%       - 32075
+%   \end{multline*}
+%    \begin{macrocode}
+\cs_new:Npn \bxjakyureki_gregorian_to_jdn:nnn #1#2#3
+  {
+    \exp_args:Nf \@@_gregorian_to_jdn_aux:nnnn
+      { \int_eval:n { \int_div_truncate:nn { (#2) - 14 } { 12 } } }
+      {#1} {#2} {#3}
+  }
+\cs_new:Npn \@@_gregorian_to_jdn_aux:nnnn #1#2#3#4
+  {
+    \int_eval:n
+      {
+        \int_div_truncate:nn
+          { 1461 * ( (#2) + 4800 + (#1) ) }
+          { 4 }
+        +
+        \int_div_truncate:nn
+          { 367 * ( (#3) - 2 - 12 * (#1) ) }
+          { 12 }
+        -
+        \int_div_truncate:nn
+          { 3 * \int_div_truncate:nn { (#2) + 4900 + (#1) } { 100 } }
+          { 4 }
+        +
+        (#4)
+        -
+        32075
+      }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjakyureki_julian_to_jdn:nnn}
+%   Converting Julian calendar date to Julian Day Number~\cite{wiki:Julian day}.
+%   The algorithm is valid for all (possibly proleptic) Julian calendar
+%   years $\geq -4712$, that is, for all JDN $\geq 0$.
+%   Divisions are integer divisions, fractional parts are ignored.
+%   \[
+%     \text{JDN} =
+%       367 \times Y - (7 \times (Y + 5001 + (M - 9)/7))/4
+%         + (275 \times M)/9 + D + 1729777
+%   \]
+%    \begin{macrocode}
+\cs_new:Npn \bxjakyureki_julian_to_jdn:nnn #1#2#3
+  {
+    \int_eval:n
+      {
+        367 * (#1)
+        -
+        \int_div_truncate:nn
+          { 7 * ( (#1) + 5001 + \int_div_truncate:nn { (#2) - 9 } { 7 } ) }
+          { 4 }
+        +
+        \int_div_truncate:nn
+          { 275 * (#2) }
+          { 9 }
+        +
+        (#3)
+        +
+        1729777
+      }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjakyureki_western_to_jdn:nnn}
+%   Converting Western calendar date to Julian Day Number. From January
+%   $1$, $-4712$ to October $4$, $1582$ is treated as the Julian calendar,
+%   and after October $15$, $1582$ is treated as the Gregorian calendar.
+%   otherwise the result is not defined.
+%    \begin{macrocode}
+\cs_new:Npn \bxjakyureki_western_to_jdn:nnn #1#2#3
+  {
+    \int_compare:nNnTF { (#1) * 10000 + (#2) * 100 + (#3) } < { 15821015 }
+      { \bxjakyureki_julian_to_jdn:nnn {#1} {#2} {#3} }
+      { \bxjakyureki_gregorian_to_jdn:nnn {#1} {#2} {#3} }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjakyureki_apply_western_from_jdn:Nn}
+% \begin{macro}{\bxjakyureki_apply_julian_from_jdn:Nn}
+% \begin{macro}{\bxjakyureki_apply_gregorian_from_jdn:Nn}
+% \begin{macro}{\@@_western_from_jdn:nn}
+% \begin{macro}{\@@_julian_from_jdn:nn}
+% \begin{macro}{\@@_gregorian_from_jdn:nn}
+%   Julian or Gregorian calendar from Julian day number~\cite{wiki:Julian day}.
+%    \begin{macrocode}
+\cs_new:Npn \bxjakyureki_apply_western_from_jdn:Nn #1#2
+  { \@@_western_from_jdn:nn {#2} #1 }
+\cs_new:Npn \bxjakyureki_apply_julian_from_jdn:Nn #1#2
+  { \@@_julian_from_jdn:nn {#2} #1 }
+\cs_new:Npn \bxjakyureki_apply_gregorian_from_jdn:Nn #1#2
+  { \@@_gregorian_from_jdn:nn {#2} #1 }
+\cs_new:Npn \@@_western_from_jdn:nn #1
+  {
+    \int_compare:nNnTF {#1} < { 2299161 }
+      { \@@_julian_from_jdn:nn {#1} }
+      { \@@_gregorian_from_jdn:nn {#1} }
+  }
+\cs_new:Npn \@@_julian_from_jdn:nn #1
+  {
+    \exp_args:Nf \@@_gregorian_from_jdn_auxi:nn
+      { \int_eval:n { (#1) + 1401 } }
+  }
+\cs_new:Npn \@@_gregorian_from_jdn:nn #1
+  {
+    \exp_args:Nf \@@_gregorian_from_jdn_auxi:nn
+      {
+        \int_eval:n
+          {
+            (#1)
+            +
+            1401
+            +
+            \int_div_truncate:nn
+              {
+                \int_div_truncate:nn
+                  { 4 * (#1) + 274277 }
+                  { 146097 }
+                *
+                3
+              }
+              { 4 }
+            -
+            38
+          }
+      }
+  }
+\cs_new:Npn \@@_gregorian_from_jdn_auxi:nn #1
+  {
+    \exp_args:Nf \@@_gregorian_from_jdn_auxii:nn
+      { \int_eval:n { 4 * (#1) + 3 } }
+  }
+\cs_new:Npn \@@_gregorian_from_jdn_auxii:nn #1
+  {
+    \exp_args:Nf \@@_gregorian_from_jdn_auxiii:nnn
+      {
+        \int_eval:n
+          {
+            \int_div_truncate:nn
+              { \int_mod:nn {#1} { 1461 } }
+              { 4 }
+          }
+      }
+      {#1}
+  }
+\cs_new:Npn \@@_gregorian_from_jdn_auxiii:nnn #1#2
+  {
+    \exp_args:Nf \@@_gregorian_from_jdn_auxiv:nnn
+      { \int_eval:n { 5 * (#1) + 2 } }
+      {#2}
+  }
+\cs_new:Npn \@@_gregorian_from_jdn_auxiv:nnn #1#2
+  {
+    \exp_args:Nff \@@_gregorian_from_jdn_auxv:nnnn
+      {
+        \int_eval:n
+          {
+            \int_div_truncate:nn
+              { \int_mod:nn {#1} { 153 } }
+              { 5 }
+            + 1
+          }
+      }
+      {
+        \int_eval:n
+          {
+            \int_mod:nn
+              { \int_div_truncate:nn {#1} { 153 } + 2 }
+              { 12 }
+            + 1
+          }
+      }
+      {#2}
+  }
+\cs_new:Npn \@@_gregorian_from_jdn_auxv:nnnn #1#2#3
+  {
+    \exp_args:Nf \@@_gregorian_from_jdn_auxvi:nnnn
+      {
+        \int_eval:n
+          {
+            \int_div_truncate:nn {#3} { 1461 }
+            -
+            4716
+            +
+            \int_div_truncate:nn { 12 + 2 - #2 } { 12 }
+          }
+      }
+      {#2} {#1}
+  }
+\cs_new:Npn \@@_gregorian_from_jdn_auxvi:nnnn #1#2#3#4
+  { #4 {#1} {#2} {#3} }
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \subsection{Convert Japanese calendar}
+%
+% \begin{macro}{\bxjakyureki_apply_lunisolar_from_jdn:Nn}
+%   Japanese lunisolar calendar from Julian day number.
+%    \begin{macrocode}
+\cs_new:Npn \bxjakyureki_apply_lunisolar_from_jdn:Nn #1#2
+  { \@@_lunisolar_from_jdn:nn {#2} {#1} }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_lunisolar_from_jdn:nn}
+%   Japanese lunisolar calendar from Julian day number.
+%    \begin{macrocode}
+\cs_new:Npn \@@_lunisolar_from_jdn:nn #1
+  {
+    \int_compare:nNnTF {#1} < { \g_@@_kyureki_data_min_jdn_int }
+      { \use_none:n }
+      {
+        \int_compare:nNnTF {#1} < { \g_@@_kyureki_data_max_jdn_int }
+          {
+            \@@_lunisolar_from_jdn_auxi:nn {#1}
+          }
+          { \use_none:n }
+      }
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxi:nn #1
+  {
+    \exp_args:Nf \@@_lunisolar_from_jdn_auxii:nnn
+      {
+%    \end{macrocode}
+%   Calculate the year. The end of the year may be the next year,
+%   but the beginning of the year must not be the previous year.
+%   Based on following:
+%   \begin{itemize}
+%     \item In japanese lunisolar calendar, a month has $29$ or $30$ days,
+%       and the $11$th month (exclude leap month) includes the winter solstice.
+%     \item In Gregorian calendar, the winter solstice is around
+%       December $21$, and Julian day number $0$ is November $24$, $-4713$.
+%     \item A solar year is about $365.2422$ days.
+%     \item Consider an error of a several days.
+%     \item In \cs{int_eval:n}, divisions and scalings are rounded.
+%   \end{itemize}
+%    \begin{macrocode}
+        \int_eval:n
+          { (((#1) - 55 + 183) * 10000 / 3652422) - 4713 }
+      }
+      {#1}
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxii:nnn #1#2
+  {
+    \exp_args:Nv
+      \@@_lunisolar_from_jdn_auxiii:nnnn
+        { g_@@_kyureki_data_ #1 } {#1} {#2}
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxiii:nnnn #1#2#3
+  {
+    \@@_lunisolar_from_jdn_auxiv:nnnnnnn
+      #1 {#2} {#3}
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxiv:nnnnnnn #1#2#3#4#5#6
+  {
+    \int_compare:nNnTF {#6} < {#1}
+      {
+        \exp_args:Nf \@@_lunisolar_from_jdn_auxii:nnn
+          { \int_eval:n { #5 - 1 } }
+          {#6}
+      }
+      {
+        \exp_args:Nf \@@_lunisolar_from_jdn_auxv:nnnnnNwn
+          { \int_eval:n { #6 - #1 } }
+          { 1 } {#5} 
+          {#2} {#3} #4 \q_stop
+      }
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxv:nnnnnNwn #1#2#3#4#5
+  #6#7 \q_stop
+  {
+    \int_compare:nNnTF {#1} < { 29 + #6 }
+      {
+        \exp_args:Nf \@@_lunisolar_from_jdn_auxvii:nnnnn
+          { \int_eval:n { #1 + 1 } }
+          {#2} { 0 } {#3}
+      }
+      {
+        \int_compare:nNnTF {#2} = {#4}
+          {
+            \exp_args:Nf \@@_lunisolar_from_jdn_auxvi:nnnnnnn
+              { \int_eval:n { #1 - (29 + #6) } }
+              {#2}
+              {#3} 
+              {#4} {#5} {#7}
+          }
+          {
+            \exp_args:Nff \@@_lunisolar_from_jdn_auxv:nnnnnNwn
+              { \int_eval:n { #1 - (29 + #6) } }
+              { \int_eval:n { #2 + 1 } }
+              {#3} 
+              {#4} {#5} #7 \q_stop
+          }
+      }
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxvi:nnnnnnn #1#2#3#4#5#6
+  {
+    \int_compare:nNnTF {#1} < { 29 + #5 }
+      {
+        \exp_args:Nf \@@_lunisolar_from_jdn_auxvii:nnnnn
+          { \int_eval:n { #1 + 1 } }
+          {#2} { 1 } {#3}
+      }
+      {
+        \exp_args:Nff \@@_lunisolar_from_jdn_auxv:nnnnnNwn
+          { \int_eval:n { #1 - (29 + #5) } }
+          { \int_eval:n { #2 + 1 } }
+          {#3} 
+          {#4} {#5} #6 \q_stop
+      }
+  }
+\cs_new:Npn \@@_lunisolar_from_jdn_auxvii:nnnnn #1#2#3#4#5
+  {
+    #5 {#4} {#3} {#2} {#1}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_japanese_from_lunisolar:nnnn}
+% \begin{macro}{\@@_japanese_from_lunisolar:nnnnnTF}
+%    \begin{macrocode}
+\cs_new:Npn \@@_japanese_from_lunisolar:nnnn #1#2#3#4
+  {
+    \@@_japanese_from_lunisolar:nnnnnTF
+      {#1} {#2} {#3} {#4}
+      { \@@_japanese_format:nnnnn }
+      {} {}
+  }
+\cs_new:Npn \@@_japanese_from_lunisolar:nnnnnTF #1#2#3#4
+  {
+    \exp_args:NV
+      \@@_japanese_from_lunisolar_auxi:nnnTF
+        \g_@@_gengo_data_tl
+        { {#1} {#2} {#3} {#4} }
+  }
+\cs_new:Npn \@@_japanese_from_lunisolar_auxi:nnnTF #1#2
+  {
+    \@@_japanese_from_lunisolar_loop:nw {#2}
+      #1 \q_recursion_tail \s_@@ \q_recursion_stop
+  }
+\cs_new:Npn \@@_japanese_from_lunisolar_loop:nw
+  #1 #2 \s_@@
+  {
+    \quark_if_recursion_tail_stop_do:nn {#2} { \use_iii:nnn }
+    \@@_japanese_from_lunisolar_auxii:nnnnnnnnn #1 #2
+  }
+\cs_new:Npn \@@_japanese_from_lunisolar_auxii:nnnnnnnnn
+  #1#2#3#4#5#6#7#8#9
+  {
+    \int_compare:nNnTF {#1} < {#5}
+      {
+        \@@_japanese_from_lunisolar_loop:nw
+          { {#1} {#2} {#3} {#4} }
+      }
+      {
+        \int_compare:nNnTF {#1} = {#5}
+          {
+            \int_compare:nNnTF { #3#2 * 100 + #4 } < { #7#6 * 100 + #8 }
+              {
+                \@@_japanese_from_lunisolar_loop:nw
+                  { {#1} {#2} {#3} {#4} }
+              }
+              {
+                \@@_japanese_from_lunisolar_auxiii:nnnnn
+                  { 1 } {#9} {#2} {#3} {#4}
+              }
+          }
+          {
+            \exp_args:Nf
+            \@@_japanese_from_lunisolar_auxiii:nnnnn
+              { \int_eval:n { #1 - #5 + 1 } }
+              {#9} {#2} {#3} {#4}
+          }
+      }
+  }
+\cs_new:Npn \@@_japanese_from_lunisolar_auxiii:nnnnn
+  #1#2#3#4#5
+  {
+    \use_i_delimit_by_q_recursion_stop:nw
+      {
+        \@@_japanese_from_lunisolar_auxiv:nnnnnnTF
+          {#2} {#1} {#3} {#4} {#5}
+      }
+  }
+\cs_new:Npn \@@_japanese_from_lunisolar_auxiv:nnnnnnTF
+  #1#2#3#4#5#6#7#8
+  { #6 {#1} {#2} {#3} {#4} {#5} #7 }
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@@_japanese_format:nnnnn}
+%    \begin{macrocode}
+\cs_new:Npn \@@_japanese_format:nnnnn #1#2#3#4#5
+  {
+    \int_compare:nNnTF {#2} = { 1 }
+      {
+        \exp_args:NV \@@_japanese_format_auxi:nnnnn
+          \c_@@_gan_tl
+      }
+      {
+        \@@_japanese_format_auxi:nnnnn {#2}
+      }
+    {#3} {#4} {#5} {#1}
+  }
+\cs_new:Npn \@@_japanese_format_auxi:nnnnn #1#2#3#4#5
+  {
+    \int_if_odd:nTF {#2}
+      {
+        \exp_args:NV \@@_japanese_format_auxii:nnnnn
+          \c_@@_uru_tl
+      }
+      {
+        \@@_japanese_format_auxii:nnnnn {}
+      }
+    {#3} {#4} {#5} {#1}
+  }
+\cs_new:Npx \@@_japanese_format_auxii:nnnnn #1#2#3#4#5
+  {
+    #4 #5
+    \exp_not:V \c_@@_nen_tl
+    #1 #2
+    \exp_not:V \c_@@_getsu_tl
+    #3
+    \exp_not:V \c_@@_nichi_tl
+  }
+%    \end{macrocode}
+% In pdf\TeX, manually insert a space between Japanese and Latin characters.
+%    \begin{macrocode}
+\group_begin:
+  \char_set_catcode_active:N \~
+  \sys_if_engine_pdftex:T
+    {
+      \cs_gset:Npn \@@_japanese_format:nnnnn #1#2#3#4#5
+        {
+          \int_compare:nNnTF {#2} = { 1 }
+            {
+              \exp_args:NV \@@_japanese_format_auxi:nnnnn
+                \c_@@_gan_tl
+            }
+            {
+              \@@_japanese_format_auxi:nnnnn {~#2~}
+            }
+          {#3} {~#4~} {~#5~} {#1}
+        }
+    }
+\group_end:
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_japanese_from_jdn:n}
+%    \begin{macrocode}
+\cs_new:Npn \@@_japanese_from_jdn:n #1
+  {
+    \bxjakyureki_apply_lunisolar_from_jdn:Nn
+      \@@_japanese_from_lunisolar:nnnn
+      {#1}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_japanese_from_western:nnn}
+%    \begin{macrocode}
+\cs_new:Npn \@@_japanese_from_western:nnn #1#2#3
+  {
+    \exp_args:Nf \@@_japanese_from_jdn:n
+      { \bxjakyureki_western_to_jdn:nnn {#1} {#2} {#3} }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{{\LaTeXe} interfaces}
+%
+%    \begin{macrocode}
+\cs_new_eq:NN \jakyureki \@@_japanese_from_western:nnn
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%</package>
+%    \end{macrocode}
+%
+%\end{implementation}
+%
+% \begin{thebibliography}{10}
+%
+%   \bibitem{NAOJ:caldb}
+%     \Ja{日本の暦日データベース --- 国立天文台暦計算室}.\\
+%     \url{https://eco.mtk.nao.ac.jp/cgi-bin/koyomi/caldb.cgi}
+%
+%   \bibitem{wiki:gengo}
+%     \Ja{元号一覧 (日本) --- ウィキペディア日本語版}.\\
+%     \url{https://ja.wikipedia.org/w/index.php?title=%E5%85%83%E5%8F%B7%E4%B8%80%E8%A6%A7_(%E6%97%A5%E6%9C%AC)&oldid=91430416}
+%
+%   \bibitem{wiki:Julian day}
+%     \emph{Julian day --- Wikipedia, The Free Encyclopedia}.\\
+%     \url{https://en.wikipedia.org/w/index.php?title=Julian_day&oldid=1101903416}
+%
+% \end{thebibliography}
+%
+%\PrintIndex

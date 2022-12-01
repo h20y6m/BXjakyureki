@@ -1,0 +1,164 @@
+%
+% Copyright (C) 2022 Yukimasa Morimi (h20y6m)
+%
+
+\documentclass{minimal}
+\input{regression-test}
+\RequirePackage[enable-debug]{expl3}
+\ExplSyntaxOn
+\debug_on:n { check-declarations , deprecation , log-functions }
+\ExplSyntaxOff
+\RequirePackage{bxjakyureki}
+
+\begin{document}
+\START
+\ExplSyntaxOn
+
+\OMIT
+% Make a human-readable log.
+\sys_if_engine_pdftex:T
+  {
+    \char_set_active_eq:nN { `\~ } \scan_stop:
+    \int_step_inline:nnn { "80 } { "FF }
+      {
+        \char_set_active_eq:nN {#1} \scan_stop:
+      }
+  }
+\TIMO
+
+\TEST{Japanese~calendar~from~Western~calendar}{
+  \TYPE { \jakyureki { 1872 } { 12 } { 31 } }
+  \TYPE { \jakyureki { 1870 } { 12 } { 22 } }
+  \TYPE { \jakyureki { 1870 } { 12 } { 21 } }
+  \TYPE { \jakyureki { 1870 } { 11 } { 23 } }
+  \TYPE { \jakyureki { 1870 } { 11 } { 22 } }
+
+  \TYPE { \jakyureki { 1868 } { 10 } { 23 } }
+  \TYPE { \jakyureki { 1868 } { 10 } { 22 } }
+  \TYPE { \jakyureki { 1865 } {  5 } {  1 } }
+  \TYPE { \jakyureki { 1865 } {  4 } { 30 } }
+  \TYPE { \jakyureki { 1864 } {  3 } { 27 } }
+  \TYPE { \jakyureki { 1864 } {  3 } { 26 } }
+  \TYPE { \jakyureki { 1861 } {  3 } { 29 } }
+  \TYPE { \jakyureki { 1861 } {  3 } { 28 } }
+  \TYPE { \jakyureki { 1860 } {  4 } {  8 } }
+  \TYPE { \jakyureki { 1860 } {  4 } {  7 } }
+  \TYPE { \jakyureki { 1855 } {  1 } { 15 } }
+  \TYPE { \jakyureki { 1855 } {  1 } { 14 } }
+  \TYPE { \jakyureki { 1848 } {  4 } {  1 } }
+  \TYPE { \jakyureki { 1848 } {  3 } { 31 } }
+  \TYPE { \jakyureki { 1845 } {  1 } {  9 } }
+  \TYPE { \jakyureki { 1845 } {  1 } {  8 } }
+  \TYPE { \jakyureki { 1831 } {  1 } { 23 } }
+  \TYPE { \jakyureki { 1831 } {  1 } { 22 } }
+  \TYPE { \jakyureki { 1818 } {  5 } { 26 } }
+  \TYPE { \jakyureki { 1818 } {  5 } { 25 } }
+  \TYPE { \jakyureki { 1804 } {  3 } { 22 } }
+  \TYPE { \jakyureki { 1804 } {  3 } { 21 } }
+  \TYPE { \jakyureki { 1801 } {  3 } { 19 } }
+  \TYPE { \jakyureki { 1801 } {  3 } { 18 } }
+  \TYPE { \jakyureki { 1789 } {  2 } { 19 } }
+  \TYPE { \jakyureki { 1789 } {  2 } { 18 } }
+  \TYPE { \jakyureki { 1781 } {  4 } { 25 } }
+  \TYPE { \jakyureki { 1781 } {  4 } { 24 } }
+  \TYPE { \jakyureki { 1772 } { 12 } { 10 } }
+  \TYPE { \jakyureki { 1772 } { 12 } {  9 } }
+  \TYPE { \jakyureki { 1764 } {  6 } { 30 } }
+  \TYPE { \jakyureki { 1764 } {  6 } { 29 } }
+  \TYPE { \jakyureki { 1751 } { 12 } { 14 } }
+  \TYPE { \jakyureki { 1751 } { 12 } { 13 } }
+  \TYPE { \jakyureki { 1748 } {  8 } {  5 } }
+  \TYPE { \jakyureki { 1748 } {  8 } {  4 } }
+  \TYPE { \jakyureki { 1744 } {  4 } {  3 } }
+  \TYPE { \jakyureki { 1744 } {  4 } {  2 } }
+  \TYPE { \jakyureki { 1741 } {  4 } { 12 } }
+  \TYPE { \jakyureki { 1741 } {  4 } { 11 } }
+  \TYPE { \jakyureki { 1736 } {  6 } {  7 } }
+  \TYPE { \jakyureki { 1736 } {  6 } {  6 } }
+  \TYPE { \jakyureki { 1716 } {  8 } {  9 } }
+  \TYPE { \jakyureki { 1716 } {  8 } {  8 } }
+  \TYPE { \jakyureki { 1711 } {  6 } { 11 } }
+  \TYPE { \jakyureki { 1711 } {  6 } { 10 } }
+  \TYPE { \jakyureki { 1704 } {  4 } { 16 } }
+  \TYPE { \jakyureki { 1704 } {  4 } { 15 } }
+  \TYPE { \jakyureki { 1688 } { 10 } { 23 } }
+  \TYPE { \jakyureki { 1688 } { 10 } { 22 } }
+  \TYPE { \jakyureki { 1684 } {  4 } {  5 } }
+  \TYPE { \jakyureki { 1684 } {  4 } {  4 } }
+  \TYPE { \jakyureki { 1681 } { 11 } {  9 } }
+  \TYPE { \jakyureki { 1681 } { 11 } {  8 } }
+  \TYPE { \jakyureki { 1673 } { 10 } { 30 } }
+  \TYPE { \jakyureki { 1673 } { 10 } { 29 } }
+  \TYPE { \jakyureki { 1661 } {  5 } { 23 } }
+  \TYPE { \jakyureki { 1661 } {  5 } { 22 } }
+  \TYPE { \jakyureki { 1658 } {  8 } { 21 } }
+  \TYPE { \jakyureki { 1658 } {  8 } { 20 } }
+  \TYPE { \jakyureki { 1655 } {  5 } { 18 } }
+  \TYPE { \jakyureki { 1655 } {  5 } { 17 } }
+  \TYPE { \jakyureki { 1652 } { 10 } { 20 } }
+  \TYPE { \jakyureki { 1652 } { 10 } { 19 } }
+  \TYPE { \jakyureki { 1648 } {  4 } {  7 } }
+  \TYPE { \jakyureki { 1648 } {  4 } {  6 } }
+  \TYPE { \jakyureki { 1645 } {  1 } { 13 } }
+  \TYPE { \jakyureki { 1645 } {  1 } { 12 } }
+  \TYPE { \jakyureki { 1624 } {  4 } { 17 } }
+  \TYPE { \jakyureki { 1624 } {  4 } { 16 } }
+  \TYPE { \jakyureki { 1615 } {  9 } {  5 } }
+  \TYPE { \jakyureki { 1615 } {  9 } {  4 } }
+  \TYPE { \jakyureki { 1596 } { 12 } { 16 } }
+  \TYPE { \jakyureki { 1596 } { 12 } { 15 } }
+  \TYPE { \jakyureki { 1593 } {  1 } { 10 } }
+  \TYPE { \jakyureki { 1593 } {  1 } {  9 } }
+  \TYPE { \jakyureki { 1573 } {  8 } { 25 } }
+  \TYPE { \jakyureki { 1573 } {  8 } { 24 } }
+  \TYPE { \jakyureki { 1570 } {  5 } { 27 } }
+  \TYPE { \jakyureki { 1570 } {  5 } { 26 } }
+  \TYPE { \jakyureki { 1558 } {  3 } { 18 } }
+  \TYPE { \jakyureki { 1558 } {  3 } { 17 } }
+  \TYPE { \jakyureki { 1555 } { 11 } {  7 } }
+  \TYPE { \jakyureki { 1555 } { 11 } {  6 } }
+  \TYPE { \jakyureki { 1532 } {  8 } { 29 } }
+  \TYPE { \jakyureki { 1532 } {  8 } { 28 } }
+  \TYPE { \jakyureki { 1528 } {  9 } {  3 } }
+  \TYPE { \jakyureki { 1528 } {  9 } {  2 } }
+  \TYPE { \jakyureki { 1521 } {  9 } { 23 } }
+  \TYPE { \jakyureki { 1521 } {  9 } { 22 } }
+  \TYPE { \jakyureki { 1504 } {  3 } { 16 } }
+  \TYPE { \jakyureki { 1504 } {  3 } { 15 } }
+  \TYPE { \jakyureki { 1501 } {  3 } { 18 } }
+  \TYPE { \jakyureki { 1501 } {  3 } { 17 } }
+  \TYPE { \jakyureki { 1492 } {  8 } { 12 } }
+  \TYPE { \jakyureki { 1492 } {  8 } { 11 } }
+  \TYPE { \jakyureki { 1489 } {  9 } { 16 } }
+  \TYPE { \jakyureki { 1489 } {  9 } { 15 } }
+  \TYPE { \jakyureki { 1487 } {  8 } {  9 } }
+  \TYPE { \jakyureki { 1487 } {  8 } {  8 } }
+  \TYPE { \jakyureki { 1469 } {  6 } {  8 } }
+  \TYPE { \jakyureki { 1469 } {  6 } {  7 } }
+  \TYPE { \jakyureki { 1467 } {  4 } {  9 } }
+  \TYPE { \jakyureki { 1467 } {  4 } {  8 } }
+  \TYPE { \jakyureki { 1466 } {  3 } { 14 } }
+  \TYPE { \jakyureki { 1466 } {  3 } { 13 } }
+  \TYPE { \jakyureki { 1461 } {  2 } {  1 } }
+  \TYPE { \jakyureki { 1461 } {  1 } { 31 } }
+  \TYPE { \jakyureki { 1457 } { 10 } { 16 } }
+  \TYPE { \jakyureki { 1457 } { 10 } { 15 } }
+  \TYPE { \jakyureki { 1455 } {  9 } {  6 } }
+  \TYPE { \jakyureki { 1455 } {  9 } {  5 } }
+  \TYPE { \jakyureki { 1452 } {  8 } { 10 } }
+  \TYPE { \jakyureki { 1452 } {  8 } {  9 } }
+  \TYPE { \jakyureki { 1449 } {  8 } { 16 } }
+  \TYPE { \jakyureki { 1449 } {  8 } { 15 } }
+  \TYPE { \jakyureki { 1444 } {  2 } { 23 } }
+  \TYPE { \jakyureki { 1444 } {  2 } { 22 } }
+  \TYPE { \jakyureki { 1441 } {  3 } { 10 } }
+  \TYPE { \jakyureki { 1441 } {  3 } {  9 } }
+  \TYPE { \jakyureki { 1429 } { 10 } {  3 } }
+  \TYPE { \jakyureki { 1429 } { 10 } {  2 } }
+  \TYPE { \jakyureki { 1428 } {  6 } { 10 } }
+  \TYPE { \jakyureki { 1428 } {  6 } {  9 } }
+  \TYPE { \jakyureki { 1394 } {  8 } {  2 } }
+  \TYPE { \jakyureki { 1394 } {  8 } {  1 } }
+}
+
+\END

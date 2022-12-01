@@ -1,0 +1,10 @@
+build/*
+
+*.zip
+
+*.pdf
+
+*.aux
+*.hd
+*.log
+*.out

@@ -1,0 +1,126 @@
+%
+% Copyright (C) 2022 Yukimasa Morimi (h20y6m)
+%
+
+\documentclass{minimal}
+\input{regression-test}
+\RequirePackage[enable-debug]{expl3}
+\ExplSyntaxOn
+\debug_on:n { check-declarations , deprecation , log-functions }
+\ExplSyntaxOff
+\RequirePackage{bxjakyureki}
+
+\begin{document}
+\START
+\ExplSyntaxOn
+
+% !!! IMPORTANT !!!
+% DO NOT log dates in  "9999/99/99" or "9999-99-99" format. 
+% l3build-check falsifies dates.
+
+\OMIT
+\cs_new_protected:Npn \test_to_jdn:Nnnn #1#2#3#4
+  {
+    \TYPE
+      {
+        #2 . #3 . #4 ~=~
+        #1 {#2} {#3} {#4} ,~
+        \exp_not:f { #1 {#2} {#3} {#4} }
+      }
+  }
+\TIMO
+
+\TEST{Converting~Gregorian~calendar~date~to~Julian~Day~Number}{
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn { -4713 } { 11 } { 23 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn { -4713 } { 11 } { 24 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn { -4713 } { 11 } { 25 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {     0 } { 12 } { 31 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {     1 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {  1582 } { 10 } { 15 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {  1858 } { 11 } { 16 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {  1858 } { 11 } { 17 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {  2000 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {  3501 } {  8 } { 15 }
+  \test_to_jdn:Nnnn \bxjakyureki_gregorian_to_jdn:nnn {  6239 } {  7 } { 12 }
+}
+
+\TEST{Converting~Julian~calendar~date~to~Julian~Day~Number}{
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn { -4712 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn { -4712 } {  1 } {  2 }
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn { -1975 } { 11 } {  7 }
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn {     0 } { 12 } { 31 }
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn {     1 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn {   763 } {  9 } { 14 }
+  \test_to_jdn:Nnnn \bxjakyureki_julian_to_jdn:nnn {  1582 } { 10 } {  4 }
+}
+
+\TEST{Converting~Western~calendar~to~Julian~Day~Number}{
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn { -4712 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn { -4712 } {  1 } {  2 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn { -1975 } { 11 } {  7 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {     0 } { 12 } { 31 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {     1 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {   763 } {  9 } { 14 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  1582 } { 10 } {  4 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  1582 } { 10 } { 15 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  1858 } { 11 } { 16 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  1858 } { 11 } { 17 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  2000 } {  1 } {  1 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  3501 } {  8 } { 15 }
+  \test_to_jdn:Nnnn \bxjakyureki_western_to_jdn:nnn {  6239 } {  7 } { 12 }
+}
+
+\OMIT
+\cs_new_protected:Npn \test_from_jdn:Nn #1#2
+  {
+    \TYPE
+      {
+        #2 ~=~
+        #1 \test_from_jdn_format:nnn {#2} ,~
+        \exp_not:f { #1 \test_from_jdn_format:nnn {#2} }
+      }
+  }
+\cs_new:Npn \test_from_jdn_format:nnn #1#2#3
+  { #1 . #2 . #3 }
+\TIMO
+
+\TEST{Gregorian~calendar~from~Julian~day~number}{
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn {       0 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn {       1 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 1721425 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 1721426 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 2299161 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 2400000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 2400001 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 2451545 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 3000000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_gregorian_from_jdn:Nn { 4000000 }
+}
+
+\TEST{Julian~calendar~from~Julian~day~number}{
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn {       0 }
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn {       1 }
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn { 1000000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn { 1721423 }
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn { 1721424 }
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn { 2000000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_julian_from_jdn:Nn { 2299160 }
+}
+
+\TEST{Western~calendar~from~Julian~day~number}{
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn {       0 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn {       1 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 1000000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 1721423 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 1721424 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 2000000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 2299160 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 2299161 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 2400000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 2400001 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 2451545 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 3000000 }
+  \test_from_jdn:Nn \bxjakyureki_apply_western_from_jdn:Nn { 4000000 }
+}
+
+\END
